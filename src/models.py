@@ -12,10 +12,9 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
-
-
-
+    fav_planet: Mapped[List["FavPlanet"]] = relationship(back_populates= 'fav_planet')
+    fav_people: Mapped[List["FavPeople"]] = relationship(back_populates = 'fav_people')
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -47,10 +46,11 @@ class Planets(db.Model):
     
 class FavPlanet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
-    planet_id : Mapped[int] = mapped_column(Integer, nullable= False)
-    user_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    planet_id : Mapped[int] = mapped_column(Integer, ForeignKey("fav_planet"))
+    user_id: Mapped[List["User"]] = relationship(back_populates='fav_planet')
 
-    def serialize(self):
+
+    def serialize_fav_planet(self):
         return {
             "planet_id" : self.planet_id,
             "user_id" : self.user_id
@@ -59,14 +59,13 @@ class FavPlanet(db.Model):
 class People(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    age: Mapped[int] = mapped_column(Integer,nullable=False)
+    age: Mapped[int] = mapped_column(Integer, nullable=False)
     gender: Mapped[str] = mapped_column(String(120), nullable=False)
     height: Mapped[str] = mapped_column(String(120), nullable=True)
     image: Mapped[str] = mapped_column(String(120), nullable=True)
     planet_id: Mapped[int] = mapped_column(Integer, ForeignKey("planets.id"))
     birth_planet: Mapped[str] = relationship(back_populates='planets')
-    favorite: Mapped[List["FavPeople"]] = relationship(back_populates='fav_people_id')  # confirmar que he relacionado bien fav people 
-    
+   
     def serialize(self):
         return {
             "id": self.id,
@@ -81,11 +80,11 @@ class People(db.Model):
 
 class FavPeople(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
-    fav_people_id : Mapped[int] = mapped_column(Integer, ForeignKey("fav_people_id")) #confirmar relacion 
-    user_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    people_id : Mapped[int] = mapped_column(Integer, ForeignKey("fav_people")) #confirmar relacion 
+    user_id: Mapped[int] = relationship(back_populates = 'fav_people')
 
 
-    def serialize(self):
+    def serialize_fav_people(self):
         return {
             "people_id" : self.people_id,
             "user_id" : self.user_id

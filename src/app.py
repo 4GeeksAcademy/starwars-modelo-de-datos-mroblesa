@@ -8,7 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db
+from models import db, User
+
 #from models import Person
 
 app = Flask(__name__)
@@ -31,6 +32,7 @@ setup_admin(app)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
+
 # generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
@@ -44,6 +46,16 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+#get de users !1ER endpoint
+@app.route('/users', methods=['GET'])  
+def handle_get_users():
+
+   # all_users = db.session.execute(select(User)).scalars().all()
+
+    response_body = {
+   #     "users": all_users
+    }
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
