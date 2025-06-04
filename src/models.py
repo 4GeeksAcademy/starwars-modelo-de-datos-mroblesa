@@ -63,8 +63,6 @@ class FavPlanet(db.Model):
             "user_id": self.user_id
        }
 
-
-
 class People(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -86,7 +84,6 @@ class People(db.Model):
             "birth_planet": self.birth_planet
         }
 
-
 class FavPeople(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     people_id : Mapped[int] = mapped_column(ForeignKey("people.id"))
@@ -94,7 +91,6 @@ class FavPeople(db.Model):
 
     user: Mapped["User"] = relationship("User", back_populates = 'fav_people')
     people: Mapped["People"] = relationship("People")
-
 
     def serialize_fav_people(self):
         return {

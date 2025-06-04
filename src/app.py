@@ -48,21 +48,6 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-#get de users !1ER endpoint
-
-@app.route('/users', methods=['GET'])  
-def handle_get_users():
-
-    all_users = db.session.execute(select(User)).scalars().all()
-
-    response_body = {
-       "users": all_users
-    }
-    return jsonify(response_body, 'todo ok'), 200
-
-#
-
-
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
