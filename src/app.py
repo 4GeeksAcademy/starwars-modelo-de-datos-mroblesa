@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+from sqlalchemy import select
 
 #from models import Person
 
@@ -48,14 +49,19 @@ def handle_hello():
     return jsonify(response_body), 200
 
 #get de users !1ER endpoint
+
 @app.route('/users', methods=['GET'])  
 def handle_get_users():
 
-   # all_users = db.session.execute(select(User)).scalars().all()
+    all_users = db.session.execute(select(User)).scalars().all()
 
     response_body = {
-   #     "users": all_users
+       "users": all_users
     }
+    return jsonify(response_body, 'todo ok'), 200
+
+#
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
